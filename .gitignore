@@ -1,9 +1,19 @@
+## Ignore Android studio configuration files
 .gradle
+.DS_Store
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
-.DS_Store
 /build
 /captures
-/TapValidation/JavaApplication13/nbproject/private/
-/TapValidation/nbproject/private/
+
+## Files from app directory
+/app/build
+
+## Ignore files from project use to generate jar
+/TapValidationProject/JavaApplication13/nbproject/private/
+/TapValidationProject/nbproject/private/
+/TapValidationProject/bin/
+/TapValidationProject/.settings/
+/TapValidationProject/.project
+/TapValidationProject/.classpath
