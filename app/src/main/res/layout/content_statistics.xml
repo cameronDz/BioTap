@@ -386,7 +386,7 @@
             android:layout_marginBottom="5dp" >
             <Button
                 android:id="@+id/statButt07"
-                android:text="@string/increase"
+                android:text="@string/decrease"
                 android:textColor="#000"
                 android:background="#add8e6"
                 android:layout_width="fill_parent"
@@ -405,7 +405,7 @@
 
             <Button
                 android:id="@+id/statButt08"
-                android:text="@string/decrease"
+                android:text="@string/increase"
                 android:textColor="#000"
                 android:background="#add8e6"
                 android:layout_width="fill_parent"
