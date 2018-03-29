@@ -15,6 +15,10 @@ original sequence.
 
 ## Update List
 
+###### 28 March 2018
+- Changes added to include new views, correct statistics error, and have on 
+phone database.
+
 ###### 27 March 2018
 - Forked from original project, code cleaned, built and deployed succesfully 
 after +2 years of no updates.
