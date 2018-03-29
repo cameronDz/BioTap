@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--- activity_menu.xml
+    @version(Original)      @author(Luke Bro & Travis Moretz)
+    Home screen view for application. Layout is view of content_menu.xml. -->
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

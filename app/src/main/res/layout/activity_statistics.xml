@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--- activity_statistics.xml
+    @version(Original)          @author(Travis Moretz)
+    View of statistics in application. Majority of view taken from
+    content_statistics.xml layout.                              -->
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

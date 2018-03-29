@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--- activity_database.xml
+    @version(2016.1.6)                  @author(Cameron Dziurgot)
+    View of database of all recent passkey attempts.            -->
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="pistachio.com.biotap.AttemptDatabase">
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:theme="@style/AppTheme.AppBarOverlay" />
+
+    <include layout="@layout/content_database" />
+</android.support.design.widget.CoordinatorLayout>

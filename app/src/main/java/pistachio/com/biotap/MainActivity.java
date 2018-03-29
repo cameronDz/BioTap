@@ -1,248 +1,124 @@
 package pistachio.com.biotap;
 
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 import java.util.List;
 
-public class MainActivity extends Activity {
+/*
+ * MainActivity.java            @author(Luke Bro & Travis Moretz)
+ * @version(Original)   A tap sequence is entered by a user, and
+ * compared to an existing sequence.
+ * @version(2015.12.21)             @editor(Cameron Dziurgot)
+ * Added dissimilarity score to the end of each popup message. Some
+ * comments and reformatting. Refactoring needed: Some code is copy/
+ * pasted from RegisterActivity class. Require more comments
+ * explaining code.
+ *
+ * @version(2016.1.4)   Global static variables added for passable
+ * score for passkey. TapInterface removed and replaced with Tap class
+ * alone since no reason for an interface in this situation.
+ *
+ * @version(2016.1.5)   Extends TapActivity class. Grid listener now
+ * completely in separate class. Button listener in TapActivity has
+ * method overridden in this class that deals with computing a comparison
+ * score. onCreate overrides parent and gets data standard deviation
+ * and mean sequences from file.
+ *
+ * @version(2016.1.8)   Moved the mapping method to utility class, and
+ * moved section in onCreate method that pulled sequence from file, put
+ * it into the utility class. Also moved popUp method to utility class.
+ * Creates several files and stores weights into each one.
+ */
 
+public class MainActivity extends TapActivity {
 
-    // Passing score.
-    public static double score = 8.0;
+    // Standard deviation and mean of a saved passkey
+    protected List<Tap> master;
+    protected List<Tap> stdDev;
 
-    protected Button button;
+    // Passing score
+    protected static double score = 25.0;
+    protected static double min = 0.0;
+    protected static double max = 500.0;
+    protected static double inc = 5.0;
 
-    protected View grid;
-
-    protected ArrayList<TapInterface> taps;
-
-    protected List<TapInterface> master;
-
-    protected List<TapInterface> stdDev;
-
-    protected boolean listening;
-
-    protected long absoluteTapTime = 0;
-
-    protected TapInterface currentTap;
-
+    /*
+     * Initial creation of view. Overrides TapActivity onCreate. Gets
+     * a saved standard deviation and mean sequence used in comparing
+     * user entered passkey.
+     */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.d("Bio.MainActivity", "onCreate");
+        // Set view, call TapActivity onCreate
         setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
 
-        this.button = (Button)findViewById(R.id.start_btn);
-        this.grid = findViewById(R.id.grid);
-        this.taps = new ArrayList<>();
-        this.listening = false;
-        this.button.setOnClickListener(buttonListener);
-        this.grid.setOnTouchListener(gridListener);
+        // Retrieving standard deviation and mean sequences
+        String s[] = TapUtilities.meanAndSd(this);
 
-
-        FileInputStream in = null;
-        try {
-
-        in = openFileInput("average");
-        InputStreamReader inputStreamReader = new InputStreamReader(in);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        String avg, dev;
-
-            if (! bufferedReader.ready()) {
-                in.close();
-                throw new FileNotFoundException();
-            }
-
-            avg = bufferedReader.readLine();
-            dev = bufferedReader.readLine();
-
-            in.close();
-
-            this.master = mapToSequence(avg);
-            this.stdDev = mapToSequence(dev);
-        } catch (FileNotFoundException e) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setMessage("There isn't a tap sequence registered.  Go back and hit register.")
-                    .setCancelable(false)
-                    .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Dialog d = (Dialog) dialog;
-                            Intent myIntent = new Intent(((Dialog) dialog).getContext(), pistachio.com.biotap.Menu.class);
-                            ((Dialog) dialog).getContext().startActivity(myIntent);
-                    }
-        });
-            builder.create().show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        // Parse strings into sequences
+        this.master = TapUtilities.mapToSeq(s[0]);
+        this.stdDev = TapUtilities.mapToSeq(s[1]);
     }
 
+    /*
+     * Button listener for Start/Stop button. Comes up with a score by
+     * comparing the user passkey and the stored passkey. Messages user
+     * the result.
+     */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    View.OnClickListener buttonListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-
-            if (listening) {
-                Log.d("Button", "Stopped listening for taps...");
-                startButton();
-
-                analyzeTaps();
-
-                taps = new ArrayList<>();
-                absoluteTapTime = 0;
-                currentTap = null;
-            } else {
-                Log.d("Button", "Started listening for taps.");
-                stopButton();
-            }
-
-            listening = ! listening;
-        }
-    };
-
-    View.OnTouchListener gridListener = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent e) {
-
-            if (listening) {
-                switch(e.getAction()) {
-                    case android.view.MotionEvent.ACTION_DOWN:
-                        if (absoluteTapTime == 0) {
-                            absoluteTapTime = e.getEventTime();
-                        }
-                        currentTap = new Tap(e.getEventTime() - absoluteTapTime, (int)e.getX(), (int)e.getY());
-                        Log.d("Touch", "Down: " + currentTap.toString());
-                        break;
-                    case android.view.MotionEvent.ACTION_UP:
-                        currentTap.setDuration((e.getEventTime() - absoluteTapTime) - currentTap.getTime());
-                        taps.add(currentTap);
-                        Log.d("Touch", "Up: " + currentTap.toString());
-                        break;
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-    };
-
-    protected void startButton() {
-        button.setText("Start");
-        button.setBackgroundColor(0xFF4CAF50);
-    }
-
-    protected void stopButton() {
-        button.setText("Stop");
-        button.setBackgroundColor(0xFFF44336);
-    }
-
-    protected void analyzeTaps() {
-
+    protected void uniqueButtAction() {
+        Log.d("Bio.MainActivity", "uniqueButtActivity");
+        // Does not analyze and empty sequence
         if (this.taps.size() == 0) {
             return;
         }
 
+        // Determines the score, sets to current score in stats
         double score = Compare.dissimilarityScore(this.master, this.taps, this.stdDev);
+        Statistics.score = score;
 
-        String message = "";
-        String confirmation = "";
-
-
-        if (score < MainActivity.score) {
-            message = "You've been successfully authenticated.";
-            confirmation = "OKAY";
+        // Strings used in messaging user in pop up
+        String message, confirmation;
+        // Determines if passkey is passable, adds values to stats, pop up
+        // message sent to user informing them of validity of passkey
+        if (score <= MainActivity.score) {
+            // User has a passing passkey score
+            message = "You've been successfully authenticated. \nScore: " +
+                    new DecimalFormat("####.##").format(score);
+            confirmation = "Success";
             Statistics.success++;
-            Statistics.score = (Statistics.score + score) / 2;
-        } else if (score < 15.00) {
-            message = "Hmm... Maybe try again...";
-            confirmation = "If I must...";
+            Statistics.score = ((Statistics.score * (Statistics.success +
+                    Statistics.fail - 1)) + score) /
+                    (Statistics.success + Statistics.fail);
+        } else if (score < MainActivity.score * 2) {
+            // Passkey did not pass, but is less than double the max score
+            message = "Error, familiar passkey but not passable. \nScore: " +
+                    new DecimalFormat("####.##").format(score);
+            confirmation = "Retry";
             Statistics.fail++;
         } else {
-            message = "Error, unrecognized tap sequence.";
-            confirmation = "OKAY";
+            // Passkey did not pass, and is double the max score
+            message = "Error, unrecognized tap sequence. \nScore: " +
+                    new DecimalFormat("####.##").format(score);
+            confirmation = "Retry";
             Statistics.fail++;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton(confirmation, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                    }
-                });
-        builder.create().show();
+        // Pop up message to user displaying score.
+        TapUtilities.toPopUp(message, confirmation, false, MainActivity.this);
+        // Sending weights and score to files
+        String s = (new DecimalFormat("#.##").format(Compare.wtCoord)) + "\n";
+        TapUtilities.writeFile("coordWeight", s, MainActivity.this, Context.MODE_APPEND);
+        s = (new DecimalFormat("#.##").format(Compare.wtDuration)) + "\n";
+        TapUtilities.writeFile("durationWeight", s, MainActivity.this, Context.MODE_APPEND);
+        s = (new DecimalFormat("#.##").format(Compare.wtTime)) + "\n";
+        TapUtilities.writeFile("timeWeight", s, MainActivity.this, Context.MODE_APPEND);
+        s =  (new DecimalFormat("#,###.##").format(Statistics.score)) + "\n";
+        TapUtilities.writeFile("overScore", s, MainActivity.this, Context.MODE_APPEND);
     }
-
-    /**
-     * Map a string to sequence.
-     *
-     * @param line
-     * @return
-     */
-    protected List<TapInterface> mapToSequence(String line) {
-        ArrayList<TapInterface> sequence = new ArrayList<>();
-
-        String[] taps = line.split(",");
-        String[] unparsedTap;
-
-        for (String tap : taps) {
-            unparsedTap = tap.split("/");
-
-            sequence.add(
-                    new Tap(
-                            Long.parseLong(unparsedTap[0]),
-                            Long.parseLong(unparsedTap[1]),
-                            Integer.parseInt(unparsedTap[2]),
-                            Integer.parseInt(unparsedTap[3])
-                    )
-            );
-        }
-
-        return sequence;
-    }
-
 }

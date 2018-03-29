@@ -1,121 +1,440 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--- content_statistics.xml
+    @version(Original)      @author(Travis Moretz & Cameron Dziurgot)
+    Page set up in RelativeLayout to display various stats from user
+    passkey attempts and overall acceptance rate.
+    @version(Version2.0)    @editor(Cameron Dziurgot)
+    Several buttons added and changed to edit acceptable score, but
+    needs to be changed so all buttons can be viewed. Buttons have to
+    be changed to be split at the vertical center of the screen.
+
+    @version(2015.12.31)    Page layout changed to ScrollView with
+    RelativeLayout embedded to allow all statistic and similarity
+    score options/buttons to be scrolled through and changed by a user.
+    Comments added. POSSIBLE REFACTORING: Change to ScrollView with
+    embedded LinearLayout that has embedded RelativeLayout for paired
+    buttons.
+
+    @version(2016.1.2)      Page layout changed to ScrollView with
+    embedded LinearLayout that utilizes RelativeLayout for formatting
+    statistics from user passkey data, and TableRows for centering
+    buttons. -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_statistics"
     tools:context="pistachio.com.biotap.Statistics">
 
-    <TextView
-        android:id="@+id/statTitle00"
-        android:text="@string/statTitle00"
-        android:layout_width="wrap_content"
+    <!--- All statistics and buttons are in linear relationship
+        aligned by using TableRows. -->
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_centerHorizontal="true"
-        android:textColor="#4CAF50"
-        android:textStyle="bold"
-        android:layout_marginBottom="40dp"
-        android:layout_marginTop="20dp"
-        android:textSize="40dp" />
+        android:paddingStart="0sp"
+        android:paddingLeft="0sp"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/statTitle01"
-        android:text="@string/statTitle01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/statTitle00"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="5dp" />
-    <TextView
-        android:id="@+id/statText01"
-        android:text="@string/statText01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignParentRight="true"
-        android:layout_alignBottom="@+id/statTitle01"
-        android:layout_marginBottom="5dp" />
+        <!--- Title of page, on top of everything. -->
+        <TextView
+            android:id="@+id/statTitle00"
+            android:text="@string/statTitle00"
+            android:textColor="#4CAF50"
+            android:textStyle="bold"
+            android:textSize="40sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/statTitle02"
-        android:text="@string/statTitle02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/statTitle01"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="5dp" />
-    <TextView
-        android:id="@+id/statText02"
-        android:text="@string/statText02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignBottom="@+id/statTitle02"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp" />
+        <!--- First statistic, directly below page title.
+            Currently set at Passkey Attempts. -->
+        <RelativeLayout
+            android:id="@+id/relative01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <TextView
+                android:id="@+id/statTitle01"
+                android:text="@string/statTitle01"
+                android:textSize="22sp"
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_marginBottom="5dp" />
 
-    <TextView
-        android:id="@+id/statTitle03"
-        android:text="@string/statTitle03"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/statTitle02"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="5dp" />
-    <TextView
-        android:id="@+id/statText03"
-        android:text="@string/statText03"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignBottom="@+id/statTitle03"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp" />
+            <TextView
+                android:id="@+id/statText01"
+                android:text="@string/statText01"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:gravity="end"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp" />
+        </RelativeLayout>
 
-    <TextView
-        android:id="@+id/statTitle04"
-        android:text="@string/statTitle04"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/statTitle03"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="5dp" />
-    <TextView
-        android:id="@+id/statText04"
-        android:text="@string/statText04"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignBottom="@+id/statTitle04"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp" />
+        <!--- Second statistic, located below first statistic.
+            Currently the Acceptance Rate of passkey attempts. -->
+        <RelativeLayout
+            android:id="@+id/relative02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <TextView
+                android:id="@+id/statTitle02"
+                android:text="@string/statTitle02"
+                android:textSize="22sp"
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="5dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete all data"
-        android:id="@+id/deleteall"
-        android:layout_below="@+id/statTitle04"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColor="#fff"
-        android:textStyle="bold"
-        android:background="#F44336"
-        android:textSize="20dp" />
+            <TextView
+                android:id="@+id/statText02"
+                android:text="@string/statText02"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginBottom="5dp" />
+        </RelativeLayout>
 
-</RelativeLayout>
+        <!--- Third statistic, located below the second statistic.
+            Currently set to Last Score a user received. -->
+        <RelativeLayout
+            android:id="@+id/relative03"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <TextView
+                android:id="@+id/statTitle03"
+                android:text="@string/statTitle03"
+                android:textSize="22sp"
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:id="@+id/statText03"
+                android:text="@string/statText03"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginBottom="5dp" />
+        </RelativeLayout>
+
+        <!--- Fourth statistic, located below the third statistic.
+            Currently set at the current Passable dissimilarity Score. -->
+        <RelativeLayout
+            android:id="@+id/relative04"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <TextView
+                android:id="@+id/statTitle04"
+                android:text="@string/statTitle04"
+                android:textSize="22sp"
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:id="@+id/statText04"
+                android:text="@string/statText04"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginBottom="5dp" />
+        </RelativeLayout>
+
+        <!--- First button set, located below the fourth statistic.
+            Currently set to decrease/increase a Passable Score. -->
+        <TableRow
+            android:id="@+id/buttSet01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <Button
+                android:id="@+id/statButt01"
+                android:text="@string/decrease"
+                android:textColor="#000"
+                android:background="#add8e6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/buttSetText01"
+                android:text="@string/buttSet01"
+                android:textColor="#000"
+                android:singleLine="false"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/statButt02"
+                android:text="@string/increase"
+                android:textColor="#000"
+                android:background="#add8e6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"/>
+        </TableRow>
+
+        <!--- Fifth statistic, located below the first button set.
+            Currently set to the Coordinates Weight in computing the
+            dissimilarity score. -->
+        <RelativeLayout
+            android:id="@+id/relative05"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <TextView
+                android:id="@+id/statTitle05"
+                android:text="@string/statTitle05"
+                android:textSize="22sp"
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:id="@+id/statText05"
+                android:text="@string/statText05"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginBottom="5dp" />
+        </RelativeLayout>
+
+        <!--- Second button set, located below the fifth statistic.
+            Currently set to decrease/increase the Coordinate Weight. -->
+        <TableRow
+            android:id="@+id/buttSet02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <Button
+                android:id="@+id/statButt03"
+                android:text="@string/decrease"
+                android:textColor="#000"
+                android:background="#add8e6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/buttSetText02"
+                android:text="@string/buttSet02"
+                android:textColor="#000"
+                android:singleLine="false"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/statButt04"
+                android:text="@string/increase"
+                android:textColor="#000"
+                android:background="#add8e6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <!--- Sixth statistic, set below the second button set.
+            Currently set to the Duration Weight in computing the
+            dissimilarity score. -->
+        <RelativeLayout
+            android:id="@+id/relative06"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <TextView
+                android:id="@+id/statTitle06"
+                android:text="@string/statTitle06"
+                android:textSize="22sp"
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:id="@+id/statText06"
+                android:text="@string/statText06"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginBottom="5dp" />
+        </RelativeLayout>
+
+        <!--- Third button set, located below the sixth statistic.
+            Currently set to decrease/increase the Duration Weight. -->
+        <TableRow
+            android:id="@+id/buttSet03"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <Button
+                android:id="@+id/statButt05"
+                android:text="@string/decrease"
+                android:textColor="#000"
+                android:background="#add8e6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/buttSetText03"
+                android:text="@string/buttSet03"
+                android:textColor="#000"
+                android:singleLine="false"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/statButt06"
+                android:text="@string/increase"
+                android:textColor="#000"
+                android:background="#add8e6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <!--- Seventh statistic, located below the third button set.
+            Currently set to the Timing Weight in computing the
+            dissimilarity score. -->
+        <RelativeLayout
+            android:id="@+id/relative07"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <TextView
+                android:id="@+id/statTitle07"
+                android:text="@string/statTitle07"
+                android:textSize="22sp"
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:id="@+id/statText07"
+                android:text="@string/statText07"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginBottom="5dp" />
+        </RelativeLayout>
+
+        <!--- Fourth button set, located below the seventh statistic.
+            Currently set to decrease/increase the Duration Weight. -->
+        <TableRow
+            android:id="@+id/buttSet04"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp" >
+            <Button
+                android:id="@+id/statButt07"
+                android:text="@string/increase"
+                android:textColor="#000"
+                android:background="#add8e6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/buttSetText04"
+                android:text="@string/buttSet04"
+                android:textColor="#000"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:singleLine="false"
+                android:gravity="center"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/statButt08"
+                android:text="@string/decrease"
+                android:textColor="#000"
+                android:background="#add8e6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <!--- First independent button, set below fourth button set.
+            Currently set to a Detailed Analysis of Weights. -->
+        <Button
+            android:id="@+id/statButt09"
+            android:text="@string/statButt01"
+            android:textColor="#000"
+            android:background="#add8e6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp" />
+
+        <!--- Second independent button, set below the first independent button.
+            Currently set to Delete All Data/Reset Weights. -->
+        <Button
+            android:id="@+id/statButt10"
+            android:text="@string/statButt02"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="#fff"
+            android:background="#F44336"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"/>
+    </LinearLayout>
+</ScrollView>
