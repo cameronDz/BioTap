@@ -15,6 +15,9 @@ original sequence.
 
 ## Update List
 
+###### 01 April 2018
+- Updated GitHub repo name.
+
 ###### 28 March 2018
 - Changes added to include new views, correct statistics error, and have on 
 phone database.
