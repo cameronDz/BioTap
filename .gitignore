@@ -6,9 +6,12 @@
 /.idea/libraries
 /build
 /captures
+android.jks
+*.swp
 
 ## Files from app directory
 /app/build
+/app/app-release.apk
 
 ## Ignore files from project use to generate jar
 /TapValidationProject/JavaApplication13/nbproject/private/
