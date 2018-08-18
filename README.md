@@ -13,6 +13,16 @@ average score the the sequence. Then users have the ability to attempt to
 reenter the tap sequence, with a score deciding how close the user was to the
 original sequence.
 
+## Updates List
+
+#### Task/Wish List for next commits into master branch 
+
+- [ ] Update title that appears for Application on Android devices to be "BioTap" rather than "MainMenu".
+- [ ] Find/create and icon for application.
+- [ ] Add thorough how to page explaining how application works/should be used. A "How-To-Use" Activity section.
+- [ ] Update package name to be standard format of com.pistachio.biotap, instead of pistachio.com.biotap
+- [ ] After package update, remove old packaged application from Play Store, and upload new packaged application.
+
 ## Update List
 
 ###### 01 April 2018
